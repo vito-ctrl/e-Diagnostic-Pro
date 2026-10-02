@@ -17,15 +17,9 @@ public class HelloServlet extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
-        response.setContentType("text/html");
+        request.setAttribute("message", "Bienvenue dans Tele-Expertise Médicale");
 
-        response.getWriter().println("""
-                <html>
-                    <body>
-                        <h1>Hello aymane</h1>
-                        <p>My tele-expertise application is running.</p>
-                    </body>
-                </html>
-                """);
+        request.getRequestDispatcher("/WEB-INF/views/hello.jsp")
+                .forward(request, response);
     }
 }
