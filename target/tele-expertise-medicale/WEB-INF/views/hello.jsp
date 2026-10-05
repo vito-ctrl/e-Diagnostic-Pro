@@ -8,7 +8,7 @@
 <body>
 
     <h1>${message}</h1>
-
+    
     <p>Notre application JEE fonctionne !</p>
 
 </body>
