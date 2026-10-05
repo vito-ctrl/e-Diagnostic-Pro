@@ -1,12 +1,21 @@
 package ma.teleexpertise.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "patients")
 public class Patient {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nom;
     private String prenom;
     private String dateNaissance;
+
+    @Column(unique = true, nullable = false)
     private String numSecu;
+    
     private String telephone;
     private String adresse;
     private String mutuelle;
