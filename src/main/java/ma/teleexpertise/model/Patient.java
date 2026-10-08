@@ -1,6 +1,9 @@
 package ma.teleexpertise.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "patients")
@@ -9,19 +12,37 @@ public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String nom;
+
+    @Column(nullable = false)
     private String prenom;
+
     private String dateNaissance;
 
     @Column(unique = true, nullable = false)
     private String numSecu;
-    
+
     private String telephone;
     private String adresse;
     private String mutuelle;
+
+    @Column(columnDefinition = "TEXT")
     private String antecedents;
+
+    @Column(columnDefinition = "TEXT")
     private String allergies;
+
+    @Column(columnDefinition = "TEXT")
     private String traitements;
+
+    @Column(nullable = false)
+    private LocalDateTime dateEnregistrement = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("datePrise DESC")
+    private List<SignesVitaux> signesVitauxList = new ArrayList<>();
 
     public Patient() {
     }
@@ -41,6 +62,14 @@ public class Patient {
         this.antecedents = antecedents;
         this.allergies = allergies;
         this.traitements = traitements;
+        this.dateEnregistrement = LocalDateTime.now();
+    }
+
+    public Patient(String nom, String prenom, String dateNaissance,
+                   String numSecu, String telephone, String adresse,
+                   String mutuelle, String antecedents, String allergies,
+                   String traitements) {
+        this(null, nom, prenom, dateNaissance, numSecu, telephone, adresse, mutuelle, antecedents, allergies, traitements);
     }
 
     public Long getId() {
@@ -129,5 +158,32 @@ public class Patient {
 
     public void setTraitements(String traitements) {
         this.traitements = traitements;
+    }
+
+    public LocalDateTime getDateEnregistrement() {
+        return dateEnregistrement;
+    }
+
+    public void setDateEnregistrement(LocalDateTime dateEnregistrement) {
+        this.dateEnregistrement = dateEnregistrement;
+    }
+
+    public List<SignesVitaux> getSignesVitauxList() {
+        return signesVitauxList;
+    }
+
+    public void setSignesVitauxList(List<SignesVitaux> signesVitauxList) {
+        this.signesVitauxList = signesVitauxList;
+    }
+
+    public SignesVitaux getDerniersSignesVitaux() {
+        if (signesVitauxList != null && !signesVitauxList.isEmpty()) {
+            return signesVitauxList.get(0);
+        }
+        return null;
+    }
+
+    public String getNomComplet() {
+        return nom + " " + prenom;
     }
 }
